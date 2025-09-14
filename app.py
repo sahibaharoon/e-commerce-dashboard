@@ -9,8 +9,7 @@ from datetime import datetime, timedelta
 # ----------------------
 st.set_page_config(
     layout="wide", 
-    page_title="Marketing Intelligence Dashboard",
-    page_icon="📊",
+    page_title="Dashboard",
     initial_sidebar_state="collapsed"
 )
 
@@ -19,60 +18,54 @@ st.markdown("""
 <style>
     /* Global styling */
     .main > div {
-        padding-top: 1rem;
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
+        padding-top: 0rem;
+        padding-left: 0rem;
+        padding-right: 0rem;
     }
     
     /* Compact dashboard header */
-    .dashboard-header {
-        background: linear-gradient(135deg, #8D6E63 0%, #A1887F 100%);
-        padding: 1rem;
-        border-radius: 8px;
-        margin-bottom: 1rem;
-        color: white;
+        .dashboard-title {
+        font-size: 2rem;
+        font-weight: 700;
         text-align: center;
-        box-shadow: 0 4px 16px rgba(141, 110, 99, 0.3);
+        color: white;
+        margin: 3px 115px 3px 0px;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+    .dashboard-header {
+        background: linear-gradient(135deg, #4A90E2 0%, #50E3C2 100%);
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
+        padding: 1rem 1rem 1rem 1rem;
+        margin-bottom: 1rem;
     }
     
-    .dashboard-title {
-        font-size: 1.8rem;
-        font-weight: 600;
-        margin: 0;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    }
-    
-    .dashboard-subtitle {
-        font-size: 0.9rem;
-        opacity: 0.9;
-        margin: 0.25rem 0 0 0;
-    }
-    
+        
     /* Compact KPI Cards */
     .kpi-container {
         display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+        flex-direction: row;
+        gap: 0.5px;
     }
     .kpi-card {
-        background: linear-gradient(145deg, #F5F5DC 0%, #EFEBE9 100%);
-        border: 1px solid #8D6E63;
+        background: linear-gradient(145deg, #E0F7FA 0%, #B2EBF2 100%);
+        border: 1px solid #4A90E2;
         border-radius: 8px;
-        padding: 0.75rem;
-        width: 120px;
-        height: 80px;
+        padding: 1rem;
+        width: 190px;
+        height: 75px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: space-evenly;
         align-items: center;
-        box-shadow: 0 2px 8px rgba(141, 110, 99, 0.2);
+        box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .kpi-value {
         font-size: 0.9rem;
         font-weight: 700;
-        color: #5D4037;
+        color: rgb(0,69,121);
         margin: 0;
         text-align: center;
     }
@@ -80,7 +73,8 @@ st.markdown("""
     .kpi-label {
         font-size: 0.7rem;
         font-weight: 600;
-        color: #8D6E63;
+        color: rgb(0,69,121);
+        margin:0;
         margin-bottom: 0.25rem;
         text-transform: uppercase;
         letter-spacing: 0.3px;
@@ -89,36 +83,34 @@ st.markdown("""
     }
         
     .kpi-card:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(141, 110, 99, 0.3);
+        transform: scale(1.1);
+        box-shadow: 0 6px 14px rgba(74, 144, 226, 0.3);
     }
     
     .kpi-value.positive {
-        color: #6D4C41;
+        color: rgb(4,121,0);
     }
     
     .kpi-value.metric {
-        color: #8D6E63;
+        color: rgb(0,69,121);
     }
     
     /* Chart Title Styling */
     .chart-title {
         font-size: 1rem;
         font-weight: 600;
-        color: #5D4037;
+        color: rgb(0,46,121);
         margin-bottom: 0.5rem;
         padding-bottom: 0.25rem;
-        border-bottom: 2px solid #D7CCC8;
+        border-bottom: 2px solid rgb(0,46,121);
     }
     
     /* Compact filter section */
     .filter-container {
-        background: linear-gradient(145deg, #EFEBE9 0%, #E8E2E2 100%);
-        border: 1px solid #D7CCC8;
+        background: linear-gradient(145deg, #E0F2F1 0%, #B2DFDB 100%);
+        border: 1px solid #80CBC4;
         border-radius: 8px;
-        padding: 0.75rem;
-        margin-bottom: 1rem;
-        box-shadow: 0 2px 8px rgba(141, 110, 99, 0.1);
+        box-shadow: 0 2px 8px rgba(74, 144, 226, 0.1);
     }
     
     /* Inline filters */
@@ -134,22 +126,40 @@ st.markdown("""
         flex-direction: column;
         min-width: 150px;
     }
-    
+
+
+    /* Targets the main container of the dataframe */
+    [data-testid="stDataFrame"] {
+        border: 1px solid #4A90E2 !important;
+        border-radius: 8px !important;
+    }
+
+    /* Styles the header row */
+    [data-testid="stDataFrame"] thead th {
+        background-color: #B2EBF2 !important;
+        color: #004D40 !important;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+
     .filter-item label {
         font-size: 0.8rem;
         font-weight: 600;
-        color: #5D4037;
+        color: #004D40;
         margin-bottom: 0.25rem;
     }
     
     /* Compact metrics section */
     .metrics-section {
-        background: linear-gradient(135deg, #F3E5AB 0%, #EDC967 100%);
-        border: 1px solid #D7CCC8;
+        background: linear-gradient(135deg, #FFF9C4 0%, #FFE57F 100%);
+        border: 1px solid #FFD54F;
         border-radius: 8px;
         padding: 1rem;
         margin-bottom: 1rem;
-        box-shadow: 0 2px 8px rgba(141, 110, 99, 0.15);
+        box-shadow: 0 2px 8px rgba(255, 193, 7, 0.15);
     }
     
     /* Grid layouts */
@@ -178,21 +188,33 @@ st.markdown("""
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
+    
     /* Streamlit widget styling */
     .stSelectbox > div > div > div {
-        background-color: #F5F5DC;
-        border: 1px solid #D7CCC8;
+        background-color: rgb(242,224,250);
+        border: 1px solid #80CBC4;
     }
     
     .stMultiSelect > div > div > div {
-        background-color: #F5F5DC;
-        border: 1px solid #D7CCC8;
+        background-color: rgb(242,224,250);
+        border: 1px solid #80CBC4;
     }
     
     .stDateInput > div > div > input {
-        background-color: #F5F5DC;
-        border: 1px solid #D7CCC8;
+        background-color: rgb(242,224,250);
+        border: 1px solid #80CBC4;
     }
+    .stDateInput > div > div {
+    background-color: rgb(242,224,250) !important;
+    border: 1px solid #80CBC4 !important;
+    border-radius: 4px;
+}    
+    
+
+    .stApp {
+    background-color:#E2D5F7 !important; 
+    }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -236,7 +258,7 @@ def style_figure(fig):
             bordercolor="#D7CCC8",
             font=dict(color="#5D4037")
         ),
-        height=230, # Set a fixed height to maintain layout consistency
+        height=360, # Set a fixed height to maintain layout consistency
         legend=dict(
             orientation="h",
             yanchor="bottom",
@@ -291,45 +313,36 @@ if google_df is None:
 # ----------------------
 # Compact Dashboard Header
 # ----------------------
-st.markdown("""
-<div class="dashboard-header">
-    <h1 class="dashboard-title">📊 Marketing Intelligence Dashboard</h1>
-    <p class="dashboard-subtitle">Real-time insights for data-driven marketing decisions</p>
-</div>
-""", unsafe_allow_html=True)
 
-# ----------------------
-# Compact Inline Filters Section
-# ----------------------
-st.markdown('<div class="filter-container">', unsafe_allow_html=True)
-
-col1, col2, col3, col4 = st.columns([2, 1.5, 1, 1.5])
-
+col1, col2 = st.columns([2, 5])
 with col1:
-    min_date = max(df["date"].min() for df in [google_df, facebook_df, tiktok_df, business_df])
-    max_date = min(df["date"].max() for df in [google_df, facebook_df, tiktok_df, business_df])
-    default_start = max_date - timedelta(days=30)
-    date_range = st.date_input(
-        "📅 Date Range", [default_start, max_date], min_value=min_date, max_value=max_date
+    st.markdown(
+        '<div class="dashboard-header"><div class="dashboard-title">E-commerce Dashboard</div></div>',
+        unsafe_allow_html=True,
     )
 
 with col2:
-    platforms_selected = st.multiselect(
-        "🚀 Platforms", ["Google", "Facebook", "TikTok"], default=["Google", "Facebook", "TikTok"]
-    )
-
-with col3:
-    freq_option = st.selectbox("📊 Frequency", ["Day", "Week", "Month"], index=1)
-    freq_map = {"Day": "D", "Week": "W", "Month": "M"}
-    freq = freq_map[freq_option]
-
-with col4:
-    all_states = pd.concat([google_df, facebook_df, tiktok_df])["state"].unique().tolist()
-    states_selected = st.multiselect(
-        "🌍 Regions", options=all_states, default=all_states[:3] if len(all_states) > 3 else all_states
-    )
-
-st.markdown('</div>', unsafe_allow_html=True)
+    colf1, colf2, colf3, colf4 = st.columns([1.4, 1.1, 1, 1.2])
+    with colf1:
+        min_date = max(df["date"].min() for df in [google_df, facebook_df, tiktok_df, business_df])
+        max_date = min(df["date"].max() for df in [google_df, facebook_df, tiktok_df, business_df])
+        default_start = max_date - timedelta(days=30)
+        date_range = st.date_input(
+            "Date Range", [default_start, max_date], min_value=min_date, max_value=max_date
+        )
+    with colf2:
+        platforms_selected = st.multiselect(
+            " Platforms", ["Google", "Facebook", "TikTok"], default=["Google", "Facebook", "TikTok"]
+        )
+    with colf3:
+        freq_option = st.selectbox(" Frequency", ["Day", "Week", "Month"], index=1)
+        freq_map = {"Day": "D", "Week": "W", "Month": "M"}
+        freq = freq_map[freq_option]
+    with colf4:
+        all_states = pd.concat([google_df, facebook_df, tiktok_df])["state"].unique().tolist()
+        states_selected = st.multiselect(
+            "🌍 Regions", options=all_states, default=all_states[:3] if len(all_states) > 3 else all_states
+        )
 
 # ----------------------
 # Data Processing
@@ -356,6 +369,16 @@ business_filtered = business_df[
 agg_platforms = aggregate(combined_platforms, freq)
 agg_business = aggregate(business_filtered, freq)
 
+# NEW: Create a unified DataFrame by merging aggregated data
+merged_df = pd.DataFrame() # Create an empty df to avoid errors if one is empty
+if not agg_business.empty:
+    merged_df = agg_business.copy()
+    if not agg_platforms.empty:
+        merged_df = pd.merge(agg_business, agg_platforms, on='date', how='left')
+
+# Fill any missing marketing data with 0 (for days with no spend)
+merged_df.fillna(0, inplace=True)
+
 # ----------------------
 # Calculate KPIs
 # ----------------------
@@ -370,49 +393,52 @@ roas = (attributed_revenue / total_spend) if total_spend > 0 else 0
 cac = (total_spend / new_customers) if new_customers > 0 else 0
 conversion_rate = (new_orders / new_customers * 100) if new_customers > 0 else 0
 profit_margin = (gross_profit / total_revenue * 100) if total_revenue > 0 else 0
-
+mer = (total_revenue / total_spend) if total_spend > 0 else 0
+total_clicks = total_metric(combined_platforms, "clicks")
+total_impressions = total_metric(combined_platforms, "impression")
+ctr = (total_clicks / total_impressions * 100) if total_impressions > 0 else 0
+total_orders = total_metric(business_filtered, "# of orders")
+aov = (total_revenue / total_orders) if total_orders > 0 else 0
+cpc = (total_spend / total_clicks) if total_clicks > 0 else 0
+poas = (gross_profit / total_spend) if total_spend > 0 else 0
 # ----------------------
 # Main Layout: KPIs + Main Chart
 # ----------------------
 main_col1, main_col2 = st.columns([1, 2])
 
 with main_col1:
-    st.markdown("### 📈 **KPIs**")
     kpi_data = [
-        ("Marketing Spend", f"${total_spend:,.0f}"), ("Revenue", f"${attributed_revenue:,.0f}"),
-        ("ROAS", f"{roas:.2f}x"), ("CAC", f"${cac:.0f}"),
-        ("Orders", f"{new_orders:,}"), ("Customers", f"{new_customers:,}"),
-        ("Profit", f"${gross_profit:,.0f}"), ("Margin", f"{profit_margin:.1f}%")
+        ("Total Marketing Spend", f"${total_spend:,.0f}"), ("Attributed Revenue", f"${attributed_revenue:,.0f}"),
+        ("ROAS", f"{roas:.2f}x"), ("Customer Acquisition Cost (CAC)", f"${cac:.0f}"),
+        ("New Orders", f"{new_orders:,}"), ("New Customers", f"{new_customers:,}"),
+        ("Gross Profit", f"${gross_profit:,.0f}"), ("Profit Margin", f"{profit_margin:.1f}%"),
+        ("Marketing Efficiency Ratio", f"{mer:.2f}x"),("Click-Through Rate (CTR)", f"{ctr:.2f}x")
+
     ]
     for i in range(0, len(kpi_data), 2):
         cols = st.columns(2)
         for j, col in enumerate(cols):
             if i + j < len(kpi_data):
                 label, value = kpi_data[i + j]
-                is_positive = label in ["Revenue", "ROAS", "Profit", "Margin"]
+                is_positive = label in ["Attributed Revenue", "ROAS", "Profit Margin", "Marketing Efficiency Ratio"]
                 col.markdown(create_kpi_card(label, value, is_positive=is_positive), unsafe_allow_html=True)
+        st.markdown("<div style='margin-bottom:8px'></div>", unsafe_allow_html=True)
 
 with main_col2:
-    if not agg_business.empty and not agg_platforms.empty:
-        line_df = pd.DataFrame({"date": agg_business["date"]})
-        line_df["Marketing Spend"] = agg_platforms["spend"].values if len(agg_platforms) > 0 else 0
-        line_df["Attributed Revenue"] = agg_platforms["attributed revenue"].values if len(agg_platforms) > 0 else 0
-        line_df["Total Business Revenue"] = agg_business["total revenue"].values
-        
+    # Check if the unified DataFrame is ready for plotting
+    if not merged_df.empty:
         fig_line = go.Figure()
-        colors = ['#8D6E63', '#A1887F', '#BCAAA4']
-        metrics = ["Marketing Spend", "Attributed Revenue", "Total Business Revenue"]
         
-        for i, metric in enumerate(metrics):
-            fig_line.add_trace(go.Scatter(
-                x=line_df["date"], y=line_df[metric], mode='lines+markers', name=metric,
-                line=dict(color=colors[i], width=2), marker=dict(size=6)
-            ))
-        
+        # Plotting directly from merged_df is much cleaner
+        fig_line.add_trace(go.Scatter(x=merged_df['date'], y=merged_df['spend'], name='Marketing Spend', line=dict(color='#FFA726')))
+        fig_line.add_trace(go.Scatter(x=merged_df['date'], y=merged_df['attributed revenue'], name='Attributed Revenue', line=dict(color='#4A90E2')))
+        fig_line.add_trace(go.Scatter(x=merged_df['date'], y=merged_df['total revenue'], name='Total Business Revenue', line=dict(color='#388E3C')))
+
         with st.container(border=True):
-            st.markdown('<div class="chart-title">📈 Performance Trends</div>', unsafe_allow_html=True)
+            st.markdown('<div class="chart-title">Performance Trends</div>', unsafe_allow_html=True)
             fig_line = style_figure(fig_line)
             st.plotly_chart(fig_line, use_container_width=True, config={'displayModeBar': False})
+        
 
 # ----------------------
 # Secondary Charts Row
@@ -427,78 +453,99 @@ with chart_col1:
         summary['ROAS'] = summary['attributed revenue'] / summary['spend']
         
         fig_platform = go.Figure(data=[
-            go.Bar(name="Spend", x=summary["platform"], y=summary["spend"], marker_color='#8D6E63'),
-            go.Bar(name="Revenue", x=summary["platform"], y=summary["attributed revenue"], marker_color='#A1887F')
+            go.Bar(name="Spend", x=summary["platform"], y=summary["spend"], marker_color='#4A90E2'),
+            go.Bar(name="Revenue", x=summary["platform"], y=summary["attributed revenue"], marker_color='#388E3C')
         ])
         
         with st.container(border=True):
-            st.markdown('<div class="chart-title">🚀 Platform Performance</div>', unsafe_allow_html=True)
+            st.markdown('<div class="chart-title">Platform Performance</div>', unsafe_allow_html=True)
             fig_platform = style_figure(fig_platform)
             fig_platform.update_layout(barmode="group")
             st.plotly_chart(fig_platform, use_container_width=True, config={'displayModeBar': False})
 
 with chart_col2:
+    # --- Top Campaigns Table (This part is the same) ---
     if not combined_platforms.empty and 'campaign' in combined_platforms.columns:
-        campaigns_df = combined_platforms.groupby("campaign")[["spend", "attributed revenue"]].sum()
-        campaigns_df['ROAS'] = campaigns_df['attributed revenue'] / campaigns_df['spend']
-        campaigns_df = campaigns_df.sort_values("spend", ascending=False).head(6).reset_index()
-        
-        fig_campaigns = go.Figure(data=[
-            go.Bar(name="Spend", x=campaigns_df["campaign"], y=campaigns_df["spend"], marker_color='#BCAAA4'),
-            go.Bar(name="Revenue", x=campaigns_df["campaign"], y=campaigns_df["attributed revenue"], marker_color='#D7CCC8')
-        ])
-        
         with st.container(border=True):
-            st.markdown('<div class="chart-title">🏆 Top Campaigns</div>', unsafe_allow_html=True)
-            fig_campaigns = style_figure(fig_campaigns)
-            fig_campaigns.update_layout(barmode="group", xaxis={'tickangle': -45})
-            st.plotly_chart(fig_campaigns, use_container_width=True, config={'displayModeBar': False})
+            st.markdown('<div class="chart-title">Top Campaigns by Revenue</div>', unsafe_allow_html=True)
 
-# ----------------------
-# Bottom Insights Row
+            campaigns_df = combined_platforms.groupby("campaign")[["spend", "attributed revenue"]].sum()
+            campaigns_df['ROAS'] = campaigns_df['attributed revenue'] / campaigns_df['spend']
+            campaigns_df = campaigns_df.sort_values("attributed revenue", ascending=False).head(6).reset_index()
+
+            def format_currency(val):
+                if val >= 1_000_000:
+                    return f"${val/1_000_000:.1f}M"
+                if val >= 1_000:
+                    return f"${val/1_000:.0f}k"
+                return f"${val:,.0f}"
+
+            campaigns_df['spend'] = campaigns_df['spend'].apply(format_currency)
+            campaigns_df['attributed revenue'] = campaigns_df['attributed revenue'].apply(format_currency)
+            campaigns_df['ROAS'] = campaigns_df['ROAS'].apply(lambda x: f"{x:.2f}x")
+            
+            campaigns_df.set_index('campaign', inplace=True)
+            st.table(campaigns_df)
+
+    # --- NEW: KPI cards to fill the empty space below the table ---
+    st.markdown("<div style='margin-top: 1rem;'></div>", unsafe_allow_html=True) # Adds vertical space
+
+    kpi_col1, kpi_col2, kpi_col3 = st.columns(3)
+    
+    with kpi_col1:
+        st.markdown(create_kpi_card("Avg. Order Value", f"${aov:,.2f}"), unsafe_allow_html=True)
+    
+    with kpi_col2:
+        st.markdown(create_kpi_card("Cost Per Click", f"${cpc:,.2f}"), unsafe_allow_html=True)
+
+    with kpi_col3:
+        st.markdown(create_kpi_card("Profit on Ad Spend", f"{poas:.2f}x"), unsafe_allow_html=True)
 # ----------------------
 if not business_filtered.empty:
     insight_col1, insight_col2 = st.columns([1, 1])
     
     with insight_col1:
-        if not agg_business.empty:
-            revenue_df = agg_business[['date', 'total revenue', 'gross profit']].copy()
-            
+        if not merged_df.empty:
             fig_revenue = go.Figure(data=[
                 go.Scatter(
-                    x=revenue_df['date'], y=revenue_df['total revenue'], fill='tonexty',
-                    mode='lines', name='Total Revenue', line=dict(color='#8D6E63')
+                    x=merged_df['date'], y=merged_df['total revenue'], fill='tonexty',
+                    mode='lines', name='Total Revenue', line=dict(color='#4A90E2')
                 ),
                 go.Scatter(
-                    x=revenue_df['date'], y=revenue_df['gross profit'], fill='tozeroy',
-                    mode='lines', name='Gross Profit', line=dict(color='#A1887F')
+                    x=merged_df['date'], y=merged_df['gross profit'], fill='tozeroy',
+                    mode='lines', name='Gross Profit', line=dict(color='#388E3C')
                 )
             ])
             with st.container(border=True):
-                st.markdown('<div class="chart-title">💰 Revenue vs Profit</div>', unsafe_allow_html=True)
+                st.markdown('<div class="chart-title"> Revenue vs Profit</div>', unsafe_allow_html=True)
                 fig_revenue = style_figure(fig_revenue)
                 st.plotly_chart(fig_revenue, use_container_width=True, config={'displayModeBar': False})
     
     with insight_col2:
-        if not agg_business.empty:
-            customer_df = agg_business[['date', 'new customers', '# of new orders']].copy()
-            
+        if not merged_df.empty:
             fig_customers = go.Figure()
-            fig_customers.add_trace(go.Scatter(
-                x=customer_df['date'], y=customer_df['new customers'], mode='lines+markers',
-                name='New Customers', line=dict(color='#8D6E63', width=2), yaxis='y'
+            
+            fig_customers.add_trace(go.Bar(
+            x=merged_df['date'], y=merged_df['new customers'],
+            name='New Customers',
+            marker_color='#388E3C',
+            opacity=0.8
             ))
-            fig_customers.add_trace(go.Scatter(
-                x=customer_df['date'], y=customer_df['# of new orders'], mode='lines+markers',
-                name='New Orders', line=dict(color='#A1887F', width=2), yaxis='y2'
+            
+            # Bar for New Orders
+            fig_customers.add_trace(go.Bar(
+                x=merged_df['date'], y=merged_df['# of new orders'],
+                name='New Orders',
+                marker_color='#4A90E2',
+                opacity=0.8
             ))
             
             with st.container(border=True):
-                st.markdown('<div class="chart-title">👥 Customer Trends</div>', unsafe_allow_html=True)
+                st.markdown('<div class="chart-title">Customer Trends</div>', unsafe_allow_html=True)
                 fig_customers = style_figure(fig_customers)
                 fig_customers.update_layout(
-                    yaxis2=dict(title="New Orders", overlaying='y', side='right'),
-                    yaxis=dict(title="New Customers"),
-                    legend=dict(x=0, y=1.2) # Adjust legend to not overlap title
+                    yaxis2=dict(title="", overlaying='y', side='right'),
+                    yaxis=dict(title=""),
+                    legend=dict(x=0, y=1.0) # Adjust legend to not overlap title
                 )
                 st.plotly_chart(fig_customers, use_container_width=True, config={'displayModeBar': False})
