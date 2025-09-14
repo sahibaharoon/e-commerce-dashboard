@@ -291,7 +291,7 @@ def load_data():
         google_df = pd.read_csv("Google.csv")
         facebook_df = pd.read_csv("Facebook.csv")
         tiktok_df = pd.read_csv("TikTok.csv")
-        business_df = pd.read_csv("Business.csv")
+        business_df = pd.read_csv("business.csv")
         
         for df in [google_df, facebook_df, tiktok_df, business_df]:
             df["date"] = pd.to_datetime(df["date"])
