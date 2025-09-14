@@ -40,17 +40,12 @@ This project is an interactive Business Intelligence (BI) dashboard designed to 
 ## Running the Project Locally
 To run this dashboard on your local machine, follow these steps:
 1.  **Clone the Repository:**
-    ```bash
-    git clone [https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git](https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git)
-    cd YOUR_REPOSITORY_NAME
-    ```
+    git clone [https://github.com/sahibaharoon/e-commerce-dashboard.git](https://github.com/sahibaharoon/e-commerce-dashboard.git)
 2.  **Create a Virtual Environment:**
     python3 -m venv venv
     source venv/bin/activate
-
 3.  **Install Dependencies:**
     pip install -r requirements.txt
-
 4.  **Run the Streamlit App:**
     streamlit run app.py
   
